@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/thediggu/godo/internal/menu"
 )
 
@@ -19,8 +20,8 @@ func main() {
 		menu.PrintMenu()
 		user_input, user_input_err := menu.TakeInput()
 
-		if user_input_err != nil || !menu.ValidateMenuInput(user_input) {
-			fmt.Println("Invalid choice")
+		if user_input_err != nil {
+			fmt.Println("Whoops something went wrong")
 		} else {
 			menu.PerformAction(user_input)
 		}

@@ -7,6 +7,7 @@ import (
 	"os"
 	"slices"
 	"time"
+
 	"github.com/thediggu/godo/internal/enum"
 	"github.com/thediggu/godo/internal/fileops"
 	"github.com/thediggu/godo/internal/models"
@@ -20,7 +21,7 @@ func getParsedTodoItem(text string) models.TodoItem {
 	return todo
 }
 
-func isPriorityValid(priority string) bool {
+func IsPriorityValid(priority string) bool {
 	pslice := []string{enum.HighPriority.PriorityString(), enum.MediumPriority.PriorityString(), enum.LowPriority.PriorityString()}
 	return slices.Contains(pslice, priority)
 }
@@ -104,7 +105,7 @@ func ListTodos() {
 }
 
 func AddTodo(todoInput, priority string) {
-	if !isPriorityValid(priority) {
+	if !IsPriorityValid(priority) {
 		fmt.Println("Invalid priority")
 		os.Exit(1)
 	}

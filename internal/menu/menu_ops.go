@@ -6,6 +6,7 @@ import (
 	"os"
 	"slices"
 	"strings"
+
 	"github.com/thediggu/godo/internal/services"
 )
 
@@ -45,13 +46,25 @@ func insertTodoEntry() {
 		fmt.Println(tierr)
 		return
 	}
+	ClearScreen()
 
-	fmt.Println("Enter priority(high/medium/low): ")
-	priorityInput, perr := TakeInput()
-	if perr != nil {
-		fmt.Println("Whoops")
-		fmt.Println(tierr)
-		return
+	var priorityInput string
+	var perr error
+	for !services.IsPriorityValid(priorityInput) {
+		fmt.Println("Enter priority(high/medium/low): ")
+		priorityInput, perr = TakeInput()
+
+		if perr != nil {
+			fmt.Println("Whoops")
+			fmt.Println(tierr)
+			return
+		}
+
+		if !services.IsPriorityValid(priorityInput) {
+			fmt.Println("Invalid priority", priorityInput)
+			waitForEnter()
+		}
+		ClearScreen()
 	}
 
 	services.AddTodo(todoInput, priorityInput)
