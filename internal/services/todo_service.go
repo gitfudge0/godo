@@ -99,7 +99,21 @@ func ListTodos() {
 
 	fmt.Println("Your todos:")
 	for i, v := range todoList {
-		str := fmt.Sprintf("%d. %s", i+1, v.Title)
+		checkmark := "[ ]"
+
+		if v.Is_done {
+			checkmark = "[X]"
+		}
+
+		var indexStr string
+
+		if i < 9 {
+			indexStr = fmt.Sprintf("0%d", i+1)
+		} else {
+			indexStr = fmt.Sprintf("%d", i+1)
+		}
+
+		str := fmt.Sprintf("%s. %s %s", indexStr, checkmark, v.Title)
 		fmt.Println(str)
 	}
 }
