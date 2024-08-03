@@ -21,11 +21,6 @@ func getParsedTodoItem(text string) models.TodoItem {
 	return todo
 }
 
-func IsPriorityValid(priority string) bool {
-	pslice := []string{enum.HighPriority.PriorityString(), enum.MediumPriority.PriorityString(), enum.LowPriority.PriorityString()}
-	return slices.Contains(pslice, priority)
-}
-
 func determineNewIndex(file *os.File) (int, error) {
 	fileInfo, err := file.Stat()
 	if err != nil {
@@ -75,6 +70,11 @@ func readTodos(file *os.File) (todoList []models.TodoItem, tlerr error) {
 	}
 
 	return todoList, nil
+}
+
+func IsPriorityValid(priority string) bool {
+	pslice := []string{enum.HighPriority.PriorityString(), enum.MediumPriority.PriorityString(), enum.LowPriority.PriorityString()}
+	return slices.Contains(pslice, priority)
 }
 
 func ListTodos() {
@@ -147,6 +147,37 @@ func AddTodo(todoInput, priority string) {
 	}
 
 	fileops.WriteTodo(file, todoItem.JsonString())
+}
+
+func ToggleTodoStatus(lineNum int) {
+	file, file_err := fileops.OpenFile(file_name)
+	if file_err != nil {
+		fmt.Println("Error opening file")
+		return
+	}
+	defer file.Close()
+
+	todoList, tlerr := readTodos(file)
+	if tlerr != nil {
+		fmt.Println("Error reading todos")
+		return
+	}
+
+	if lineNum > len(todoList) {
+		fmt.Println("Invalid todo index")
+		return
+	}
+
+	todoList[lineNum-1].Is_done = !todoList[lineNum-1].Is_done
+	var output string
+
+	for _, v := range todoList {
+		output += v.JsonString()
+	}
+
+	file.Truncate(0)
+	file.Seek(0, 0)
+	file.WriteString(output)
 }
 
 func DeleteTodo(id int) {

@@ -14,16 +14,12 @@ const FILE_NAME = "todo.todofile"
 
 func main() {
 	menu.ClearScreen()
+	menu.PrintMenu()
 	var user_input string
 
 	for user_input != "4" {
-		menu.PrintMenu()
-		user_input, user_input_err := menu.TakeInput()
-
-		if user_input_err != nil {
-			fmt.Println("Whoops something went wrong")
-		} else {
-			menu.PerformAction(user_input)
-		}
+		var menu_input string
+		fmt.Scan(&menu_input)
+		menu.PerformAction(menu_input)
 	}
 }

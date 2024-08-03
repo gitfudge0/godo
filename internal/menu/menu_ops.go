@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"slices"
+	"strconv"
 	"strings"
 
 	"github.com/thediggu/godo/internal/services"
@@ -15,8 +16,10 @@ func ClearScreen() {
 }
 
 func PrintMenu() {
+	services.ListTodos()
+	fmt.Println("")
 	fmt.Println("Enter your choice: ")
-	fmt.Println("1. List all todos")
+	fmt.Println("1. Toggle status")
 	fmt.Println("2. Add a todo")
 	fmt.Println("3. Delete a todo")
 	fmt.Println("4. Exit")
@@ -50,7 +53,7 @@ func insertTodoEntry() {
 
 	var priorityInput string
 	var perr error
-	for !services.IsPriorityValid(priorityInput) {
+	for !services.IsPriorityValid(strings.ToLower(priorityInput)) {
 		fmt.Println("Enter priority(high/medium/low): ")
 		priorityInput, perr = TakeInput()
 
@@ -60,14 +63,14 @@ func insertTodoEntry() {
 			return
 		}
 
-		if !services.IsPriorityValid(priorityInput) {
+		if !services.IsPriorityValid(strings.ToLower(priorityInput)) {
 			fmt.Println("Invalid priority", priorityInput)
 			waitForEnter()
 		}
 		ClearScreen()
 	}
 
-	services.AddTodo(todoInput, priorityInput)
+	services.AddTodo(todoInput, strings.ToLower(priorityInput))
 	ClearScreen()
 	services.ListTodos()
 }
@@ -77,12 +80,20 @@ func waitForEnter() {
 	bufio.NewReader(os.Stdin).ReadBytes('\n')
 }
 
-func preAction() {
+func waitForToggleInput() {
+	services.ListTodos()
+	fmt.Println("\nEnter the index of todo to toggle status or press enter to continue")
+	var input string
+	fmt.Scan(&input)
+	fmt.Println(input)
+	if i, err := strconv.Atoi(input); i > 0 && err == nil {
+		services.ToggleTodoStatus(i)
+	}
 	ClearScreen()
+	PrintMenu()
 }
 
-func postAction() {
-	waitForEnter()
+func preAction() {
 	ClearScreen()
 }
 
@@ -90,16 +101,19 @@ func PerformAction(choice string) {
 	preAction()
 	switch choice {
 	case "1":
-		services.ListTodos()
+		waitForToggleInput()
 	case "2":
 		insertTodoEntry()
+		waitForEnter()
+		ClearScreen()
+		PrintMenu()
 	case "3":
 		// This was supposed to do something
 	case "4":
 		fmt.Println("Bye!")
 		os.Exit(0)
 	default:
-		fmt.Println("Invalid choice")
+		ClearScreen()
+		PrintMenu()
 	}
-	postAction()
 }
