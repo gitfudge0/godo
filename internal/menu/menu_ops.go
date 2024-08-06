@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/thediggu/godo/internal/services"
+	"github.com/gitfudge0/godo/internal/services"
 )
 
 func ClearScreen() {

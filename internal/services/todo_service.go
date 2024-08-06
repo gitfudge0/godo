@@ -8,9 +8,9 @@ import (
 	"slices"
 	"time"
 
-	"github.com/thediggu/godo/internal/enum"
-	"github.com/thediggu/godo/internal/fileops"
-	"github.com/thediggu/godo/internal/models"
+	"github.com/gitfudge0/godo/internal/enum"
+	"github.com/gitfudge0/godo/internal/fileops"
+	"github.com/gitfudge0/godo/internal/models"
 )
 
 const file_name = "todo.todofile"

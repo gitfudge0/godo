@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/thediggu/godo/internal/menu"
+	"github.com/gitfudge0/godo/internal/menu"
 )
 
 const FILE_NAME = "todo.todofile"
