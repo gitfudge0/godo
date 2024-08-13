@@ -156,7 +156,7 @@ func AddTodo(todoInput, priority string) {
 		Id:         id,
 	}
 
-	fileops.WriteTodo(file, todoItem.JsonString())
+	fileops.WriteTodo(file, todoItem.ToJsonString())
 }
 
 func ToggleTodoStatus(lineNum int) {
@@ -182,7 +182,7 @@ func ToggleTodoStatus(lineNum int) {
 	var output string
 
 	for _, v := range todoList {
-		output += v.JsonString()
+		output += v.ToJsonString()
 	}
 
 	file.Truncate(0)
@@ -208,7 +208,7 @@ func DeleteTodo(id int) {
 	var output string
 
 	for _, v := range updatedList {
-		output += v.JsonString()
+		output += v.ToJsonString()
 	}
 
 	file.Truncate(0)
