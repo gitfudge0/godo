@@ -75,6 +75,19 @@ func insertTodoEntry() {
 	services.ListTodos()
 }
 
+func initiateDelete() {
+	services.ListTodos()
+	fmt.Println("\nEnter ID to delete")
+	var input string
+	fmt.Scan(&input)
+	fmt.Println(input)
+	if i, err := strconv.Atoi(input); i > 0 && err == nil {
+		services.DeleteTodo(i)
+	}
+	ClearScreen()
+	PrintMenu()
+}
+
 func waitForEnter() {
 	fmt.Println("\nPress enter to continue")
 	bufio.NewReader(os.Stdin).ReadBytes('\n')
@@ -108,7 +121,7 @@ func PerformAction(choice string) {
 		ClearScreen()
 		PrintMenu()
 	case "3":
-		// This was supposed to do something
+		initiateDelete()
 	case "4":
 		fmt.Println("Bye!")
 		os.Exit(0)

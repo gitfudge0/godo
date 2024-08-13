@@ -21,6 +21,16 @@ func getParsedTodoItem(text string) models.TodoItem {
 	return todo
 }
 
+func removeByIndex(todoList []models.TodoItem, index int) (filteredList []models.TodoItem) {
+	for i, value := range todoList {
+		if index != i+1 {
+			filteredList = append(filteredList, value)
+		}
+	}
+
+	return filteredList
+}
+
 func determineNewIndex(file *os.File) (int, error) {
 	fileInfo, err := file.Stat()
 	if err != nil {
@@ -188,20 +198,20 @@ func DeleteTodo(id int) {
 	}
 	defer file.Close()
 
-	lineNum := 1
-
-	scanner := bufio.NewScanner(file)
-
-	for scanner.Scan() {
-		if lineNum == id {
-			// OK, I'll figure this out later - gonna go eat dinner. Ciao!
-		}
-		_ = scanner.Text()
-		lineNum += 1
-	}
-
-	if err := scanner.Err(); err != nil {
-		fmt.Println("Error deleting item")
+	todoList, tlerr := readTodos(file)
+	if tlerr != nil {
+		fmt.Println("Error reading todos")
 		return
 	}
+
+	updatedList := removeByIndex(todoList, id)
+	var output string
+
+	for _, v := range updatedList {
+		output += v.JsonString()
+	}
+
+	file.Truncate(0)
+	file.Seek(0, 0)
+	file.WriteString(output)
 }
