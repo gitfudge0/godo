@@ -3,23 +3,34 @@ package main
 import (
 	"fmt"
 
+	"github.com/gitfudge0/godo/internal/fileops"
 	"github.com/gitfudge0/godo/internal/menu"
 )
 
-const FILE_NAME = "todo.todofile"
-
-// 1. Take continuouse input until user quits - done
-// 2. Marks todos as done
-// 3. Delete todos
-
 func main() {
-	menu.ClearScreen()
-	menu.PrintMenu()
-	var user_input string
+	file, fileErr := fileops.OpenFile()
 
-	for user_input != "4" {
-		var menu_input string
-		fmt.Scan(&menu_input)
-		menu.PerformAction(menu_input)
+	if fileErr != nil {
+		fmt.Println(fmt.Errorf("error opening todo file: %w", fileErr))
+	}
+	defer file.Close()
+
+	todoFile := fileops.TodoFile{
+		File: file,
+	}
+
+	menu := menu.Menu{
+		TodoFile: &todoFile,
+	}
+	menu.TodoFile.ParseFile()
+
+	var input string
+
+	for input != "4" {
+		menu.ClearScreen()
+		menu.PrintItems()
+		menu.PrintMenu()
+		input, _ := menu.TakeInput()
+		menu.PerformAction(input)
 	}
 }
