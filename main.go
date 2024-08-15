@@ -2,38 +2,35 @@ package main
 
 import (
 	"fmt"
-	"os"
 
+	"github.com/gitfudge0/godo/internal/fileops"
 	"github.com/gitfudge0/godo/internal/menu"
 )
 
-func OpenFile() (*os.File, error) {
-	const FILE_NAME = "todo.todofile"
-	_, fileStatErr := os.Stat(FILE_NAME)
-
-	if fileStatErr != nil {
-		file, err := os.Create(FILE_NAME)
-		return file, err
-	}
-
-	file, err := os.OpenFile(FILE_NAME, os.O_CREATE|os.O_RDWR, os.ModeAppend)
-	return file, err
-}
-
 func main() {
-	_, fileErr := OpenFile()
+	file, fileErr := fileops.OpenFile()
 
 	if fileErr != nil {
 		fmt.Println(fmt.Errorf("error opening todo file: %w", fileErr))
 	}
+	defer file.Close()
 
-	menu.ClearScreen()
-	menu.PrintMenu()
-	var user_input string
+	todoFile := fileops.TodoFile{
+		File: file,
+	}
 
-	for user_input != "4" {
-		var menu_input string
-		fmt.Scan(&menu_input)
-		menu.PerformAction(menu_input)
+	menu := menu.Menu{
+		TodoFile: &todoFile,
+	}
+	menu.TodoFile.ParseFile()
+
+	var input string
+
+	for input != "4" {
+		menu.ClearScreen()
+		menu.PrintItems()
+		menu.PrintMenu()
+		input, _ := menu.TakeInput()
+		menu.PerformAction(input)
 	}
 }

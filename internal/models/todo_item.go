@@ -20,7 +20,7 @@ type TodoItemInterface interface {
 	ToggleStatus()
 }
 
-func (item *TodoItem) toggleStatus() {
+func (item *TodoItem) ToggleStatus() {
 	item.Is_done = !item.Is_done
 }
 

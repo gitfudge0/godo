@@ -4,7 +4,8 @@ import (
 	"os"
 )
 
-func OpenFile(FILE_NAME string) (*os.File, error) {
+func OpenFile() (*os.File, error) {
+	const FILE_NAME = "todo.todofile"
 	_, fileStatErr := os.Stat(FILE_NAME)
 
 	if fileStatErr != nil {
